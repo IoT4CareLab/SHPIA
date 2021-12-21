@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Developer">
+        <EditTextPreference
+            android:defaultValue="http://192.168.1.8:8000/"
+            android:inputType="textUri"
+            android:key="pref_backend_url"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Server URL" />
+
+        <EditTextPreference
+            android:defaultValue="360"
+            android:inputType="number"
+            android:key="pref_cache_time"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Cache time (s)" />
+
+        <EditTextPreference
+            android:defaultValue="500"
+            android:inputType="number"
+            android:key="pref_nordic_freq"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Nordic frequency (ms)" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Data collection">
+        <EditTextPreference
+            android:defaultValue="10"
+            android:inputType="number"
+            android:key="pref_push_delta"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Push delta (s)" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_enable_motion"
+            android:title="Collect motion data" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_enable_temperature"
+            android:title="Collect temperature data" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_enable_pressure"
+            android:title="Collect pressure data" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_enable_humidity"
+            android:title="Collect humidity data" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_enable_airQuality"
+            android:title="Collect air quality data" />
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sensorConfigLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".view.fragment.SensorConfigFragment"
+    android:paddingHorizontal="10dp"
+    android:paddingVertical="30dp"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/sensorConfigTitle"
+        style="@style/Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:gravity="center_horizontal"
+        android:text="Configure sensor" />
+
+    <EditText
+        android:id="@+id/sensorConfigName"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:inputType="text"
+        android:layout_centerInParent="true"
+        android:ellipsize="start"
+        android:gravity="center_horizontal"
+        android:hint="Name"
+        android:layout_marginBottom="15dp"/>
+
+    <EditText
+        android:id="@+id/sensorConfigDesc"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:inputType="text"
+        android:layout_centerInParent="true"
+        android:ellipsize="start"
+        android:gravity="center_horizontal"
+        android:hint="Description"
+        android:layout_marginBottom="15dp"/>
+
+   <!-- <EditText
+        android:id="@+id/sensorConfigPriority"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:inputType="number"
+        android:layout_centerInParent="true"
+        android:ellipsize="start"
+        android:gravity="center_horizontal"
+        android:hint="Priority"
+        android:layout_marginBottom="15dp"/>-->
+
+    <Button
+        android:id="@+id/sensorConfigButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="16dp"
+        android:text="Confirm" />
+
+    <Button
+        android:id="@+id/sensorConfigDeleteButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="16dp"
+        android:text="Delete sensor" />
+
+</LinearLayout>

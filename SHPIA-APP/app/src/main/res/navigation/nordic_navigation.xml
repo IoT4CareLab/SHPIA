@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nordic_navigation"
+    app:startDestination="@id/loginFragment">
+    <fragment
+        android:id="@+id/ambientListFragment"
+        android:name="com.raffaello.nordic.view.fragment.AmbientListFragment"
+        android:label="My ambients"
+        tools:layout="@layout/fragment_ambient_list" >
+        <action
+            android:id="@+id/actionDetail"
+            app:destination="@id/ambientDetailFragment" />
+        <action
+            android:id="@+id/actionAdd"
+            app:destination="@id/ambientAddFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ambientDetailFragment"
+        android:name="com.raffaello.nordic.view.fragment.AmbientDetailFragment"
+        android:label="{title}"
+        tools:layout="@layout/fragment_ambient_detail" >
+        <action
+            android:id="@+id/actionList"
+            app:destination="@id/ambientListFragment" />
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue="Dettaglio Ambiente" />
+        <action
+            android:id="@+id/actionNestedDetail"
+            app:destination="@id/ambientDetailFragment" />
+        <argument
+            android:name="ambient"
+            app:argType="com.raffaello.nordic.model.Ambient"
+            app:nullable="true" />
+        <action
+            android:id="@+id/actionNestedAdd"
+            app:destination="@id/ambientAddFragment" />
+        <action
+            android:id="@+id/actionSensorAdd"
+            app:destination="@id/sensorAddFragment" />
+        <action
+            android:id="@+id/actionEdit"
+            app:destination="@id/sensorConfigFragment" />
+        <action
+            android:id="@+id/actionSensorDetail"
+            app:destination="@id/sensorDetailFragment" />
+
+    </fragment>
+    <dialog
+        android:id="@+id/ambientAddFragment"
+        android:name="com.raffaello.nordic.view.fragment.AmbientAddFragment"
+        android:label="fragment_ambient_add_list_dialog"
+        tools:layout="@layout/fragment_ambient_add" >
+        <argument
+            android:name="ambient"
+            app:argType="com.raffaello.nordic.model.Ambient"
+            app:nullable="true" />
+    </dialog>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.raffaello.nordic.view.fragment.SettingsFragment"
+        android:label="Settings" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.raffaello.nordic.view.fragment.LoginFragment"
+        android:label="Login"
+        app:defaultNavHost="false"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/loginAction"
+            app:destination="@id/ambientListFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/nordic_navigation"
+            app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/sensorAddFragment"
+        android:name="com.raffaello.nordic.view.fragment.SensorAddFragment"
+        android:label="Add a new Nordic"
+        tools:layout="@layout/fragment_sensor_add" >
+        <action
+            android:id="@+id/actionConfig"
+            app:destination="@id/sensorConfigFragment" />
+        <argument
+            android:name="ambient"
+            app:argType="com.raffaello.nordic.model.Ambient"
+            app:nullable="true" />
+    </fragment>
+    <dialog
+        android:id="@+id/sensorConfigFragment"
+        android:name="com.raffaello.nordic.view.fragment.SensorConfigFragment"
+        android:label="fragment_sensor_config"
+        tools:layout="@layout/fragment_sensor_config" >
+        <action
+            android:id="@+id/actionSensorAdded"
+            app:destination="@id/ambientDetailFragment" />
+        <argument
+            android:name="sensor"
+            app:argType="com.raffaello.nordic.model.NordicDevice" />
+        <argument
+            android:name="lockEdit"
+            app:argType="boolean" />
+    </dialog>
+    <fragment
+        android:id="@+id/sensorDetailFragment"
+        android:name="com.raffaello.nordic.view.fragment.SensorDetailFragment"
+        android:label="Real time sensor data"
+        tools:layout="@layout/fragment_sensor_detail" >
+        <argument
+            android:name="sensor"
+            app:argType="com.raffaello.nordic.model.NordicDevice" />
+    </fragment>
+</navigation>
