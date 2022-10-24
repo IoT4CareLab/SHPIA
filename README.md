@@ -7,7 +7,8 @@ with contributions from:
 - Marco Rafaello <marco.rafaello@studenti.univr.it> - Working on BackEnd and Frontend
 - Christian Farina <christian.farina@studenti.univr.it> - Extending SHPIA to BLE broadcast communicaiton technology
 
-# HOW TO RUN THE SERVER (first you need to install python and mongodb) #
+How to run the server (first you need to install python and mongodb)
+-------------
 
 Even though it is not necessary, it is a good practice to set a virtual environment with python. 
 
@@ -35,7 +36,8 @@ If you have some errors try to execute the file named wipe.sh in SHPIA-API\nordi
 	3 run the server again
 	 
 
-# HOW TO CREATE A USER #
+How to create a user
+-------------
 
 In order to use the application you need to create a user.
 
@@ -53,7 +55,8 @@ In order to use the application you need to create a user.
 	4 Login with the user you just created to check if everything is ok.
 	
 
-# HOW TO RUN THE APPLICATION (first you need to install Android Studio) #
+How to run the applicaiton (first you need to install Android Studio)
+-------------
 
 Open the project SHPIA-APP with Android Studio (do not open shpia-main, ONLY SHPIA-APP). Now you need to modify some parameters:
 
@@ -66,14 +69,17 @@ Open the project SHPIA-APP with Android Studio (do not open shpia-main, ONLY SHP
 It is important to run the application on your smartphone, to do this you need to connect the smartphone with Android Studio. Do not use the emulator. To run the application you need to run the server first.
 
 
-# SUPPORTED SMARTPHONES #
+SUPPORTED SMARTPHONES
+-------------
 Every smartphone with Android version > 5.2
 
-# SUPPORTED BLE Devices #
+SUPPORTED BLE Devices
+-------------
 Nordic Thingy 52 ---> https://www.nordicsemi.com/Products/Development-hardware/Nordic-Thingy-52
 
 
-# Acknowledgements #
+Acknowledgements
+-------------
 Thanks to IFIP International Cross-Domain Conference reviewers for the preciouse suggestions related to SHPIA.
 
 License
