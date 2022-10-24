@@ -85,4 +85,5 @@ Thanks to IFIP International Cross-Domain Conference reviewers for the preciouse
 Citing
 -------------
 When using SHPIA please cite the following publication:
-Demrozi, Florenc, and Graziano Pravadelli. "SHPIA: A Low-Cost Multi-purpose Smart Home Platform for Intelligent Applications." In Internet of Things. IoT through a Multi-disciplinary Perspective: 5th IFIP International Cross-Domain Conference, IFIPIoT 2022, Amsterdam, The Netherlands, October 27–28, 2022, Proceedings, pp. 217-234. Cham: Springer International Publishing, 2022.
+
+Demrozi, Florenc, and Graziano Pravadelli. "_SHPIA: A Low-Cost Multi-purpose Smart Home Platform for Intelligent Applications._" In Internet of Things. IoT through a Multi-disciplinary Perspective: 5th IFIP International Cross-Domain Conference, IFIPIoT 2022, Amsterdam, The Netherlands, October 27–28, 2022, Proceedings, pp. 217-234. Cham: Springer International Publishing, 2022.
