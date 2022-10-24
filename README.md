@@ -7,11 +7,6 @@ with contributions from:
 - Marco Rafaello <marco.rafaello@studenti.univr.it> - Working on BackEnd and Frontend
 - Christian Farina <christian.farina@studenti.univr.it> - Extending SHPIA to BLE broadcast communicaiton technology
 
-License
--------
-Copyright 2022, Florenc Demrozi.
-See the licensing documentation at https://developer.android.com/guide/publishing/licensing.html
-
 # HOW TO RUN THE SERVER (first you need to install python and mongodb) #
 
 Even though it is not necessary, it is a good practice to set a virtual environment with python. 
@@ -81,6 +76,10 @@ Nordic Thingy 52 ---> https://www.nordicsemi.com/Products/Development-hardware/N
 # Acknowledgements #
 Thanks to IFIP International Cross-Domain Conference reviewers for the preciouse suggestions related to SHPIA.
 
+License
+-------
+Copyright 2022, Florenc Demrozi.
+See the licensing documentation at https://developer.android.com/guide/publishing/licensing.html
 
 Citing
 -------------
