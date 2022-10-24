@@ -1,4 +1,4 @@
-# shpia
+# SHPIA: Smart Home Platform for Intelligent Applications
 HOW TO RUN THE SERVER (first you need to install python and mongodb)
 
 Even though it is not necessary, it is a good practice to set a virtual environment with python. 
@@ -58,7 +58,7 @@ Open the project SHPIA-APP with Android Studio (do not open shpia-main, ONLY SHP
 It is important to run the application on your smartphone, to do this you need to connect the smartphone with Android Studio. Do not use the emulator. To run the application you need to run the server first.
 
 
-SUPPORTED SMARTPHONES: Android > 5.2
-SUPPORTED BLE Devices: Nordic Thingy 52 ---> https://www.nordicsemi.com/Products/Development-hardware/Nordic-Thingy-52
+SUPPORTED SMARTPHONES: Every smarthone with Android version > 5.2
 
+SUPPORTED BLE Devices: Nordic Thingy 52 ---> https://www.nordicsemi.com/Products/Development-hardware/Nordic-Thingy-52
 
