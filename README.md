@@ -80,7 +80,7 @@ Nordic Thingy 52 ---> https://www.nordicsemi.com/Products/Development-hardware/N
 
 Acknowledgements
 -------------
-Thanks to IFIP International Cross-Domain Conference reviewers for the preciouse suggestions related to SHPIA.
+Thanks to IFIP International Internet of Things Conference reviewers for the preciouse suggestions related to SHPIA.
 
 License
 -------
