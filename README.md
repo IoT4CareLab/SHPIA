@@ -85,7 +85,7 @@ Thanks to IFIP International Internet of Things Conference reviewers for the pre
 License
 -------
 Copyright 2022, Florenc Demrozi.
-See the licensing documentation at https://developer.android.com/guide/publishing/licensing.html
+See the licensing GNU General Public License v3.0 documentation (https://choosealicense.com/licenses/gpl-3.0/).
 
 Citing
 -------------
