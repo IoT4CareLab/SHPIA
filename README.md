@@ -1,5 +1,5 @@
 # SHPIA: Smart Home Platform for Intelligent Applications
-==================================================================
+-------------
 
 2020 - 2022, Florenc Demrozi <forenc.demorzi@uis.no> - specifications definition, design, and testing of the architecture. 
 
