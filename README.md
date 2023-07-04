@@ -7,8 +7,8 @@ with contributions from:
 - Marco Rafaello <marco.rafaello@studenti.univr.it> - Working on BackEnd and Frontend
 - Christian Farina <christian.farina@studenti.univr.it> - Extending SHPIA to BLE broadcast communicaiton technology
 
-## HOW TO RUN THE SERVER (first you need to install python and mongodb)
 -------------
+## HOW TO RUN THE SERVER (first you need to install python and mongodb)
 
 Tutorial for mongodb installation: https://www.youtube.com/watch?v=oC6sKlhz0OE
 
