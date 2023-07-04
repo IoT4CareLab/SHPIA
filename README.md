@@ -15,17 +15,17 @@ Tutorial for mongodb installation: https://www.youtube.com/watch?v=oC6sKlhz0OE
 Even though it is not necessary, it is a good practice to set a virtual environment with python. 
 
 	1) Create a virtual environment called env1 in a directory
-		python3 -m venv env1
+	python3 -m venv env1
 
 	2) Activate the environment
-		env1\Scripts\activate
+	env1\Scripts\activate
 
-	3) Go to the directory SHPIA-API\nordic-api-master (you will find a requirements.txt with the dependencies) and run this command:
-		pip3 install -r requirements.txt
+	3) Go to the directory SHPIA-API\nordic-api-master and run this command:
+	pip3 install -r requirements.txt
 
 	4) Go to nordic-api-master\src and run the server
 		python3 manage.py runserver <your private ip: port>
-		
+	
 		EXAMPLE: python3 manage.py runserver 192.168.1.10:8000
 		(to know your ip address, open the cmd and run ipconfig)
 		
@@ -60,11 +60,15 @@ In order to use the application you need to create a user.
 
 Open the project SHPIA-APP with Android Studio (do not open shpia-main, ONLY SHPIA-APP). Now you need to modify some parameters:
 
-	1) Open the class named NordicApiService in the folder SHPIA-APP\app\src\main\java\com\raffaello\nordic\model and replace the ip address in line 24 with your private ip that you used to run the server
+	1) Open the class NordicApiService in SHPIA-APP\app\src\main\java\com\raffaello\nordic\model 
 
-	2) Open settings.xml in the folder SHPIA-APP\app\src\main\res\xml and do the same thing with the ip address in line 6 
+	2) Replace the ip address in line 24 with your private ip that you used to run the server
 
-	3) Run the application 
+	3) Open settings.xml in the folder SHPIA-APP\app\src\main\res\xml 
+
+	4)  Replace the ip address in line 6 with your private ip that you used to run the server
+
+	5) Run the application  
 
 It is important to run the application on your smartphone, to do this you need to connect the smartphone with Android Studio. Do not use the emulator. To run the application you need to run the server first.
 
