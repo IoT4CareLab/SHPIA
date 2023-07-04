@@ -2,15 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginHorizontal="24dp"
+    android:orientation="vertical"
     tools:context=".view.fragment.SensorAddFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="318dp"
         android:layout_weight="1">
 
         <ProgressBar
@@ -27,15 +27,48 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/sensorsDiscoverRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="-120dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/BLEDiscoverRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="295dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/watchiscoverRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="295dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/sensorsDiscoverSwitch"
+        style="@style/Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="10dp"
+        android:text="Nordic scanner " />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/sensorsDiscoverSwitchBLE"
         style="@style/Title"
-        android:text="Activate or deactivate scan"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:text="Beacon scanner" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/sensorsDiscoverSwitchWatch"
+        style="@style/Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:text="Watch scanner" />
 </LinearLayout>

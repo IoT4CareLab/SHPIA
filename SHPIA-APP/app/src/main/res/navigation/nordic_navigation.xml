@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/ambientListFragment"
         android:name="com.raffaello.nordic.view.fragment.AmbientListFragment"
-        android:label="My ambients"
+        android:label="My environments"
         tools:layout="@layout/fragment_ambient_list" >
         <action
             android:id="@+id/actionDetail"
@@ -79,7 +79,7 @@
     <fragment
         android:id="@+id/sensorAddFragment"
         android:name="com.raffaello.nordic.view.fragment.SensorAddFragment"
-        android:label="Add a new Nordic"
+        android:label="Add a new sensor"
         tools:layout="@layout/fragment_sensor_add" >
         <action
             android:id="@+id/actionConfig"
@@ -99,7 +99,7 @@
             app:destination="@id/ambientDetailFragment" />
         <argument
             android:name="sensor"
-            app:argType="com.raffaello.nordic.model.NordicDevice" />
+            app:argType="com.raffaello.nordic.model.Device" />
         <argument
             android:name="lockEdit"
             app:argType="boolean" />
@@ -111,6 +111,6 @@
         tools:layout="@layout/fragment_sensor_detail" >
         <argument
             android:name="sensor"
-            app:argType="com.raffaello.nordic.model.NordicDevice" />
+            app:argType="com.raffaello.nordic.model.Device" />
     </fragment>
 </navigation>

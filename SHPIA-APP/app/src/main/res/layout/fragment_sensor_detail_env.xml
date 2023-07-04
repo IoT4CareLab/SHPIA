@@ -178,6 +178,25 @@
                         android:layout_weight="1"
                         android:orientation="vertical">
 
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:contentDescription="rssi"
+                            android:gravity="center"
+
+                            android:text="RSSI"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/rssi"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:paddingTop="16dp"
+                            android:text="-"
+                            android:textSize="16sp" />
                     </LinearLayout>
                 </LinearLayout>
 

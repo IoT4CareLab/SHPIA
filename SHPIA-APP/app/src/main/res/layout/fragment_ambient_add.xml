@@ -18,7 +18,7 @@
         android:gravity="center_horizontal"
         style="@style/Title"
         android:layout_marginBottom="15dp"
-        android:text="Add new ambient" />
+        android:text="Add new environment" />
 
     <EditText
         android:id="@+id/ambientAddText"
@@ -37,13 +37,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="16dp"
-        android:text="Create new ambient" />
+        android:text="Create new environment" />
 
     <Button
         android:id="@+id/ambientAddFromKeyButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="16dp"
-        android:text="Join ambient" />
+        android:text="Join environment" />
+    
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/beacon"
+        style="@style/Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="5dp"
+        android:text="Enable broadcast mode" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/watch"
+        style="@style/Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="5dp"
+        android:text="Enable watch mode" />
 
 </LinearLayout>
