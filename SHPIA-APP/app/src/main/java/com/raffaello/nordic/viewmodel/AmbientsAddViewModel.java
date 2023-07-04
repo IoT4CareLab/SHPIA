@@ -1,13 +1,11 @@
 package com.raffaello.nordic.viewmodel;
 
 import android.app.Application;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.raffaello.nordic.model.Ambient;
 import com.raffaello.nordic.model.NordicApi;
 import com.raffaello.nordic.model.NordicApiService;
@@ -32,13 +30,13 @@ public class AmbientsAddViewModel extends AndroidViewModel {
     }
 
 
-    public void addAmbientFromName(String name, Ambient parent){
-        Ambient ambient = new Ambient(name, false);
+    public void addAmbientFromName(String name, Ambient parent, boolean sensor, boolean watch){
+        Ambient ambient = new Ambient(name, false,sensor,watch);
         addNewAmbient(ambient, parent);
 
     }
-    public void addAmbientFromKey(String key, Ambient parent){
-        Ambient ambient = new Ambient(key, true);
+    public void addAmbientFromKey(String key, Ambient parent, boolean sensor, boolean watch){
+        Ambient ambient = new Ambient(key, true, sensor,watch);
         addNewAmbient(ambient, parent);
     }
 

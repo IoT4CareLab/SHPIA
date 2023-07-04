@@ -7,34 +7,16 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
-import com.couchbase.lite.CouchbaseLiteException;
-import com.couchbase.lite.DataSource;
-import com.couchbase.lite.Document;
-import com.couchbase.lite.Expression;
-import com.couchbase.lite.Meta;
-import com.couchbase.lite.Query;
-import com.couchbase.lite.QueryBuilder;
-import com.couchbase.lite.Result;
-import com.couchbase.lite.ResultSet;
-import com.couchbase.lite.SelectResult;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonObject;
 import com.raffaello.nordic.model.NordicApi;
 import com.raffaello.nordic.model.NordicApiService;
 import com.raffaello.nordic.model.NordicDeviceDataList;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 

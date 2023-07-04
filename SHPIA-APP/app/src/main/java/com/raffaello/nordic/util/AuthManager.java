@@ -3,7 +3,6 @@ package com.raffaello.nordic.util;
 import android.app.Application;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,20 +13,16 @@ import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.DataSource;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
-import com.couchbase.lite.Expression;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryBuilder;
 import com.couchbase.lite.Result;
 import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.raffaello.nordic.model.Ambient;
 import com.raffaello.nordic.model.AuthRequest;
 import com.raffaello.nordic.model.AuthResponse;
 import com.raffaello.nordic.model.NordicApi;
 import com.raffaello.nordic.model.NordicApiService;
 import com.raffaello.nordic.model.ResponseStatus;
-import com.raffaello.nordic.viewmodel.AmbientsListViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,8 +54,8 @@ public class AuthManager extends AndroidViewModel {
     public void login(String username, String password, Context context){
 
         AuthRequest request = new AuthRequest(username, password);
-
         Call<AuthResponse> call = api.login(request);
+        loginRequestSuccess = new MutableLiveData<>();// to avoid  login crash when first attempt is invalid
 
         call.enqueue(
                 new Callback<AuthResponse>() {

@@ -2,7 +2,7 @@
 1. Applicazione in inglese
 2. Nuovo sistema di raccolta dei dati con performance migliorate
 3. Implementazione del multithreading durante la raccolta dati
-4. Implementata interfaccia grafica per mostare i dati raccoli in tempo reale
+4. Implementata interfaccia grafica per mostare i dati raccolti in tempo reale
 
 # Problemi noti
 1. In rare occasioni il telefono smette di ricevere aggiornamenti ma non perde la connessione con il sensore. (Rilevato solo con OP3T)
@@ -12,31 +12,27 @@
    Da definire se quale sia il range di frequenza di questi sensori.
 4. Collegando più sensori le prestazioni di raccolta dati del secondo scendono in modo inversamente proporzionale alla frequenza. A valori di 50hz la campionatura sembra
    procedere abbastanza correttamente ma sono necessarie ulteriori prove.
-5. Le prestazioni della campionatura scendono in generale quando il telefono non è in idle. Azioni come lo sblocco dello schermo o la navigazione della UI influiscono
-   sulla raccolta.
+5. Le prestazioni della campionatura scendono in generale quando il telefono non è in idle. Azioni come lo sblocco dello schermo o la navigazione della UI influiscono sulla raccolta.
+6. Non si sa come interpretare i dati dell'accelerometro dei Tag, è stata fatta una conversione da esadecimale a decimale ed il risultato è stato diviso per 100000, ma è un calcolo fatto semplicemente per far assomigliare i valori a quelli dei Nordic.
 
 
 # Todo
 1. Rework upload local storage quando il device torna online
 2. Rimuovere vecchie strutture dati per la raccolta (NordicDeviceData ...)
 3. provare motion e environment con frequenze basse. (motion 50hz, temperatura ad almeno 1hz)
-4. stoppare service di raccolta quando tutti i sensori si sono disconnessi
 5. migliorare first discovery aspettare le fine del service discovery
 6. preference non si aggiornano quando si fa il wipe della cache. è necessario visitare la pagina delle impostazioni per attivarle
+7. Implementare la raccolta dati con l'orologio (enable watch mode)
 
 
-# Test dei limiti dei sensori (SHORT)
+# Test dei limiti dei sensori nordic (SHORT)
 1. 40hz motion, 1hz env, 1 sensore, FUNZIONA 
 2. 50hz motion, 1hz env, 1 sensore, CRASHA
 3. 50hz motion, 0.5hz env, 1 sensore, FUNZIONA
-
 4. 20hz motion, 0.5hz env, 2 sensori, FUNZIONA
 
 
 # Nuovo
-1. Bug crash del first login failed
-2. Update sensor details
-3. Rimuovere vecchie strutture e servizi
-4. Impedire inizio di una nuova raccolta dati se ce ne è già una attiva
-5. Se il bluethooth è disattivato la ricerca crasha
-6. Ogni tanto la chiamata post fallisce. Probabilmente system.nanotime
+1. Update sensor details
+2. Rimuovere vecchie strutture e servizi
+3. Ogni tanto la chiamata post fallisce. Probabilmente system.nanotime

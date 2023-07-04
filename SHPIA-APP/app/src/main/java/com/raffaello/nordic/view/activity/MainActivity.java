@@ -18,15 +18,16 @@ import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.raffaello.nordic.R;
+import com.raffaello.nordic.model.Device;
 import com.raffaello.nordic.model.NordicApi;
 import com.raffaello.nordic.model.NordicApiService;
-import com.raffaello.nordic.model.NordicDevice;
 import com.raffaello.nordic.service.DataCollectorService;
+import com.raffaello.nordic.util.BeaconScanner;
 import com.raffaello.nordic.util.DatabaseManager;
 import com.raffaello.nordic.util.NetworkChangeReceiver;
 import com.raffaello.nordic.util.PermissionUtils;
@@ -56,10 +57,13 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements ThingySdkManager.ServiceConnectionListener {
 
+    public static Context context;
+
     // App
     private NavController navController;
     private DatabaseManager databaseManager;
     private DeviceScanner sensorScanner;
+    private BeaconScanner scanner;
     private NordicApiService nordicApiService;
 
     // Service
@@ -76,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements ThingySdkManager.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        MainActivity.context = getApplicationContext();//used for location in class DeviceScanner
         Set<Integer> topLevelFragments = new HashSet<>();
         topLevelFragments.add(R.id.loginFragment);
         topLevelFragments.add(R.id.ambientListFragment);
@@ -86,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements ThingySdkManager.
         topLevelFragments.add(R.id.sensorAddFragment);
         topLevelFragments.add(R.id.sensorDetailFragment);
 
-        //TODO: FIX LOGIN CRASH WHEN FIRST ATTEMPT IS INVALID. ALSO ADD SNAKEBAR
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(topLevelFragments).build();
         navController = Navigation.findNavController(this, R.id.fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
@@ -98,14 +101,17 @@ public class MainActivity extends AppCompatActivity implements ThingySdkManager.
         linkThingylibSdk();
 
         sensorScanner = ViewModelProviders.of(this).get(DeviceScanner.class);
+        scanner=BeaconScanner.getInstance();
         nordicApiService = NordicApiService.getInstance();
 
         observeScan();
 
         registerReceiver(new NetworkChangeReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
 
-        //databaseManager.openOrCreateDatabaseForUser(getApplicationContext(), "database");
-
+    //returns the context of MainActivity
+    public static Context getAppContext() {
+        return MainActivity.context;
     }
 
     @Override
@@ -148,28 +154,30 @@ public class MainActivity extends AppCompatActivity implements ThingySdkManager.
             Toast.makeText(this, "Connecting to user sensors...", Toast.LENGTH_SHORT).show();
             NordicApi api = nordicApiService.getApi();
             String header = "Token " +  SharedPreferencesHelper.getInstance(getApplication()).getAuthToken();
-            Call<List<NordicDevice>> call = api.getAllUserSensors(header);
+            Call<List<Device>> call = api.getAllUserSensors(header);
 
-            call.enqueue(new Callback<List<NordicDevice>>() {
+            call.enqueue(new Callback<List<Device>>() {
                 @Override
-                public void onResponse(Call<List<NordicDevice>> call, Response<List<NordicDevice>> response) {
+                public void onResponse(Call<List<Device>> call, Response<List<Device>> response) {
                     if(!response.isSuccessful()){
                         Log.i("messaggio", "Bad api request");
                     }
                     else{
-                        List<NordicDevice> retrievedSensors = response.body();
-                        for(NordicDevice sensor : retrievedSensors)
+                        List<Device> retrievedSensors = response.body();
+                        scanner.updateUnavailableDevices(retrievedSensors);//get the memorized devices (used in beaconconsumer)
+                        for(Device sensor : retrievedSensors)
                             sensorsAddressList.add(sensor.address);
 
                         // Scan for linked sensors
                         sensorScanner.startBLEScan(scanCallback);
                         Timer timer = new Timer();
                         timer.schedule(new StopTask(), 14000);
+
                     }
                 }
 
                 @Override
-                public void onFailure(Call<List<NordicDevice>> call, Throwable t) {
+                public void onFailure(Call<List<Device>> call, Throwable t) {
                     Log.i("messaggio", "Server temporary unavailable");
                 }
             });
@@ -197,7 +205,6 @@ public class MainActivity extends AppCompatActivity implements ThingySdkManager.
         public void onBatchScanResults(@NonNull List<no.nordicsemi.android.support.v18.scanner.ScanResult> results) {
             super.onBatchScanResults(results);
             for(ScanResult result : results) {
-
                 BluetoothDevice device = result.getDevice();
                 if(!thingySdkManager.getConnectedDevices().contains(device) && sensorsAddressList.contains(device.getAddress())) {
                     connectSensor(device);
@@ -219,10 +226,10 @@ public class MainActivity extends AppCompatActivity implements ThingySdkManager.
 
     // Data collection
     private void startDataCollection(){
-
+        Looper.prepare();//used to avoid crash
         if(thingySdkManager.getConnectedDevices().isEmpty()) {
-            Log.i("messaggio", "No sensor founded");
-            Toast.makeText(this, "No sensor founded!", Toast.LENGTH_SHORT).show();
+            Log.i("messaggio", "No Nordic founded");
+            Toast.makeText(this, "No Nordic founded!", Toast.LENGTH_SHORT).show();
         }
         else {
             for (BluetoothDevice device : thingySdkManager.getConnectedDevices()) {
@@ -234,27 +241,23 @@ public class MainActivity extends AppCompatActivity implements ThingySdkManager.
                     thingySdkManager.setConstantLedMode(device, r, g, b);
                 }
             }
-
-            if (ServiceUtils.isRunning(DataCollectorService.class, this)) {
-                Log.i("messaggio", "Data collection service already running. New founded sensors added");
-                Toast.makeText(this, "Data collection service already running. New founded sensors added", Toast.LENGTH_SHORT).show();
-                dataCollectorService.initDataCollection();
-            } else {
-                //Log.i("messaggio", "Starting data collection service");
-                Intent startIntent = new Intent(MainActivity.this, DataCollectorService.class);
-                startIntent.setAction(ServiceActions.START.toString());
-                startService(startIntent);
-                bindService(startIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-            }
         }
 
+        if (ServiceUtils.isRunning(DataCollectorService.class, this)) {
+            Log.i("messaggio", "Data collection service already running. New founded sensors added");
+            Toast.makeText(this, "Data collection service already running. New founded sensors added", Toast.LENGTH_SHORT).show();
+            dataCollectorService.initDataCollection();
+        } else {
+            Intent startIntent = new Intent(MainActivity.this, DataCollectorService.class);
+            startIntent.setAction(ServiceActions.START.toString());
+            startService(startIntent);
+            bindService(startIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+        }
     }
 
     public void stopDataCollection(){
 
         if(ServiceUtils.isRunning(DataCollectorService.class, this)) {
-            //Log.i("messaggio", "Stopping data collection service");
-            //Toast.makeText(this, "Stopping data collection service", Toast.LENGTH_SHORT).show();
             unbindService(serviceConnection);
             Intent stopIntent = new Intent(MainActivity.this, DataCollectorService.class);
             stopIntent.setAction(ServiceActions.STOP.toString());
@@ -267,7 +270,6 @@ public class MainActivity extends AppCompatActivity implements ThingySdkManager.
         for(BluetoothDevice device : thingySdkManager.getConnectedDevices()){
             thingySdkManager.disconnectFromThingy(device);
         }
-
     }
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
@@ -287,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements ThingySdkManager.
     private void observeScan(){
         sensorScanner.bluethootOff.observe(this, bluetoothOff -> {
             if (bluetoothOff instanceof Boolean) {
-                Toast.makeText(this, "Scan failed. Check if bluethooth is active", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Scan failed. Check if bluethooth and location are active", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -431,8 +433,4 @@ public class MainActivity extends AppCompatActivity implements ThingySdkManager.
 
         }
     };
-
-    public DataCollectorService getDataCollectorService() {
-        return dataCollectorService;
-    }
 }

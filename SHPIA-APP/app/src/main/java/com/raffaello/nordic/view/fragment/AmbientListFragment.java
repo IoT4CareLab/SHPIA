@@ -3,27 +3,21 @@ package com.raffaello.nordic.view.fragment;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -189,7 +183,7 @@ public class AmbientListFragment extends CommonFragment {
                 .getLiveData("deviceIsOffline");
         newAmbientAdded.observe(getViewLifecycleOwner(), s -> {
             if (s) {
-                Snackbar.make(swipeRefreshLayout, "Ambient added", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(swipeRefreshLayout, "Environment added", Snackbar.LENGTH_SHORT).show();
                 viewModel.forceRefresh();
                 newAmbientAdded.setValue(false);
             }

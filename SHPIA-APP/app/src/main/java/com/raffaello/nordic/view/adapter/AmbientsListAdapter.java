@@ -1,6 +1,6 @@
 package com.raffaello.nordic.view.adapter;
 
-import android.util.Log;
+import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,14 +8,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 import com.raffaello.nordic.R;
 import com.raffaello.nordic.model.Ambient;
+import com.raffaello.nordic.view.activity.MainActivity;
 import com.raffaello.nordic.view.fragment.AmbientDetailFragmentDirections;
-import com.raffaello.nordic.view.fragment.AmbientListFragment;
 import com.raffaello.nordic.view.fragment.AmbientListFragmentDirections;
 
 import java.util.ArrayList;
@@ -51,6 +52,12 @@ public class AmbientsListAdapter extends RecyclerView.Adapter<AmbientsListAdapte
         LinearLayout layout = holder.itemView.findViewById(R.id.ambientCardLayout);
 
         Ambient ambient = ambientsList.get(position);
+        
+        if(ambient.name.endsWith("(broadcast)"))
+            chip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.getAppContext(), R.color.orange)));
+
+        if(ambient.name.endsWith("(watch)"))
+            chip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.getAppContext(), R.color.green)));
 
         layout.setOnClickListener(v -> {
 

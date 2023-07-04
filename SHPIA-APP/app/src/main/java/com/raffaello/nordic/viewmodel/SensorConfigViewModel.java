@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Document;
+import com.raffaello.nordic.model.Device;
 import com.raffaello.nordic.model.NordicApi;
 import com.raffaello.nordic.model.NordicApiService;
 import com.raffaello.nordic.model.NordicDevice;
@@ -32,7 +33,7 @@ public class SensorConfigViewModel extends AndroidViewModel {
     private final NordicApiService nordicAPIService = NordicApiService.getInstance();
 
     // Async
-    private AsyncTask<NordicDevice, Void, NordicDevice> deleteTask;
+    private AsyncTask<Device, Void, Device> deleteTask;
 
     // Others
     private SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper.getInstance(getApplication());
@@ -42,16 +43,16 @@ public class SensorConfigViewModel extends AndroidViewModel {
     }
 
 
-    public void addSensorToAmbient(NordicDevice sensor){
+    public void addSensorToAmbient(Device sensor){
 
         NordicApi api = nordicAPIService.getApi();
 
         String header = "Token " +  SharedPreferencesHelper.getInstance(getApplication()).getAuthToken();
-        Call<NordicDevice> call = api.addSensor(header, sensor.ambient, sensor);
+        Call<Device> call = api.addSensor(header, sensor.ambient, sensor);
 
-        call.enqueue(new Callback<NordicDevice>() {
+        call.enqueue(new Callback<Device>() {
             @Override
-            public void onResponse(Call<NordicDevice> call, Response<NordicDevice> response) {
+            public void onResponse(Call<Device> call, Response<Device> response) {
                 if (!response.isSuccessful()) {
                     Log.i("messaggio", "Error while adding sensor to backend");
                     Toast.makeText(getApplication(), "Error while adding sensor to backend", Toast.LENGTH_SHORT).show();
@@ -65,7 +66,7 @@ public class SensorConfigViewModel extends AndroidViewModel {
             }
 
             @Override
-            public void onFailure(Call<NordicDevice> call, Throwable t) {
+            public void onFailure(Call<Device> call, Throwable t) {
                 Log.i("messaggio", "Server is not available");
                 Toast.makeText(getApplication(), "Server is not available", Toast.LENGTH_SHORT).show();
             }
@@ -73,7 +74,7 @@ public class SensorConfigViewModel extends AndroidViewModel {
 
     }
 
-    public void deleteSensor(NordicDevice sensor){
+    public void deleteSensor(Device sensor){
 
         NordicApi api = nordicAPIService.getApi();
 
@@ -103,11 +104,11 @@ public class SensorConfigViewModel extends AndroidViewModel {
     }
 
 
-    private class DeleteSensorTask extends AsyncTask<NordicDevice, Void, NordicDevice> {
+    private class DeleteSensorTask extends AsyncTask<Device, Void, Device> {
 
         @Override
-        protected NordicDevice doInBackground(NordicDevice... nordicDevices) {
-            NordicDevice sensor = nordicDevices[0];
+        protected Device doInBackground(Device... nordicDevices) {
+            Device sensor = nordicDevices[0];
 
             Document document = DatabaseManager.getDatabase().getDocument(sensor.getDocumentId());
 
@@ -123,7 +124,7 @@ public class SensorConfigViewModel extends AndroidViewModel {
         }
 
         @Override
-        protected void onPostExecute(NordicDevice sensor) {
+        protected void onPostExecute(Device sensor) {
             preferencesHelper.saveUpdateTime(0, String.valueOf(sensor.ambient), DocumentType.SENSOR);
             sensorDeleted.setValue(true);
         }

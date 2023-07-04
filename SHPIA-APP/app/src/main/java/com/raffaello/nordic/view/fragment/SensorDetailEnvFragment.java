@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,33 +26,30 @@ import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.raffaello.nordic.R;
-import com.raffaello.nordic.model.NordicDevice;
+import com.raffaello.nordic.model.Device;
+import com.raffaello.nordic.service.DataCollectorService;
+import com.raffaello.nordic.util.BeaconScanner;
+import com.raffaello.nordic.util.ServiceUtils;
+import com.raffaello.nordic.view.activity.MainActivity;
 
-import org.w3c.dom.Text;
+import org.altbeacon.beacon.Beacon;
 
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
-import java.util.LinkedHashMap;
-import java.util.Random;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import no.nordicsemi.android.thingylib.ThingyListener;
 import no.nordicsemi.android.thingylib.ThingyListenerHelper;
 import no.nordicsemi.android.thingylib.ThingySdkManager;
-import no.nordicsemi.android.thingylib.utils.ThingyUtils;
 
 public class SensorDetailEnvFragment extends Fragment {
 
     private ThingySdkManager thingySdkManager;
-    private NordicDevice sensor;
+    private Device sensor;
     private BluetoothDevice device;
     private boolean isConnected;
+    private BeaconScanner scanner;
 
     @BindView(R.id.line_chart_temperature)
     LineChart lineChartTemperature;
@@ -79,13 +75,16 @@ public class SensorDetailEnvFragment extends Fragment {
     @BindView(R.id.tvoc)
     TextView tvocView;
 
-    public SensorDetailEnvFragment(NordicDevice sensor){
+    @BindView(R.id.rssi)
+    TextView rssi;
+
+    public SensorDetailEnvFragment(Device sensor){
         this.sensor = sensor;
+        scanner=BeaconScanner.getInstance();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_sensor_detail_env, container, false);
         ButterKnife.bind(this, view);
@@ -96,10 +95,6 @@ public class SensorDetailEnvFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //prepareTemperatureGraph();
-        //preparePressureGraph();
-        //prepareHumidityGraph();
-
         prepareGraph(lineChartTemperature, SensorType.TEMPERATURE ,-10f, 40f);
         prepareGraph(lineChartPressure, SensorType.PRESSURE,700f, 1100f);
         prepareGraph(lineChartHumidity, SensorType.HUMIDITY,0f, 100f);
@@ -107,14 +102,12 @@ public class SensorDetailEnvFragment extends Fragment {
     }
 
     private boolean checkConnection(){
-
         for(BluetoothDevice bdevice: thingySdkManager.getConnectedDevices()){
             if(bdevice.getAddress().equals(sensor.address)){
                 device = bdevice;
                 return true;
             }
         }
-
         return false;
     }
 
@@ -127,18 +120,24 @@ public class SensorDetailEnvFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        thingySdkManager = ThingySdkManager.getInstance();
-        isConnected = checkConnection();
+        if(sensor.description.startsWith("Nordic")){
+            thingySdkManager = ThingySdkManager.getInstance();
+            isConnected = checkConnection();
 
-        if(isConnected) {
-            ThingyListenerHelper.registerThingyListener(getContext(), thingyListener, device);
+            if(isConnected)
+                ThingyListenerHelper.registerThingyListener(getContext(), thingyListener, device);
+        }
+        else{
+            if(ServiceUtils.isRunning(DataCollectorService.class, MainActivity.getAppContext()))//if I am collecting data
+                scanner.setFragment(sensor.address,this);
         }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ThingyListenerHelper.unregisterThingyListener(getContext(), thingyListener);
+        if(sensor.description.startsWith("Nordic"))
+            ThingyListenerHelper.unregisterThingyListener(getContext(), thingyListener);
     }
 
     private ThingyListener thingyListener = new ThingyListener() {
@@ -391,7 +390,7 @@ public class SensorDetailEnvFragment extends Fragment {
     }
 
     // Graphs classes
-    private enum SensorType{
+    public enum SensorType{
         TEMPERATURE,
         PRESSURE,
         HUMIDITY
@@ -435,4 +434,25 @@ public class SensorDetailEnvFragment extends Fragment {
             return mFormat.format(value);
         }
     }
+
+    //methods for beacon scanner
+    public void setTemp(Beacon beacon){
+        temperatureView.setText(""+scanner.getTemperatura(beacon));//set temperature
+        addEntry(getTimestamp(), scanner.getTemperatura(beacon), SensorDetailEnvFragment.SensorType.TEMPERATURE);//update the graph
+    }
+
+    public void setHum(Beacon beacon){
+        humidityView.setText(""+scanner.getUmidita(beacon));//set humidity
+        addEntry(getTimestamp(), scanner.getUmidita(beacon), SensorDetailEnvFragment.SensorType.HUMIDITY);//update the graph
+    }
+
+    public void setRssi(Beacon beacon){
+        rssi.setText(""+beacon.getRssi());
+    }
+
+    private String getTimestamp(){
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        return  timestamp.toString().replace(".", ":");
+    }
+
 }

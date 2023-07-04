@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
@@ -25,9 +24,7 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.raffaello.nordic.R;
 import com.raffaello.nordic.model.Ambient;
-import com.raffaello.nordic.view.activity.MainActivity;
 import com.raffaello.nordic.view.adapter.SensorGridAdapter;
-import com.raffaello.nordic.viewmodel.SensorsAddViewModel;
 import com.raffaello.nordic.viewmodel.SensorsListViewModel;
 
 import java.util.ArrayList;

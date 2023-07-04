@@ -10,20 +10,18 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-
-import com.couchbase.lite.CouchbaseLiteException;
-import com.couchbase.lite.MutableDocument;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raffaello.nordic.model.NordicApi;
 import com.raffaello.nordic.model.NordicApiService;
 import com.raffaello.nordic.model.NordicDeviceDataList;
-import com.raffaello.nordic.util.DatabaseManager;
+import com.raffaello.nordic.util.BeaconScanner;
 import com.raffaello.nordic.util.ServiceActions;
 import com.raffaello.nordic.util.SharedPreferencesHelper;
 
+import org.altbeacon.beacon.Beacon;
+
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,6 +50,7 @@ public class DataCollectorService extends Service {
     // App
     private NordicApiService nordicApiService = NordicApiService.getInstance();
     private SharedPreferencesHelper sharedPreferencesHelper;
+    private BeaconScanner scanner;
 
     // Class
     private Map<String, NordicDeviceDataList> intervalData = new HashMap<>();
@@ -89,6 +88,8 @@ public class DataCollectorService extends Service {
         super.onCreate();
         thingySdkManager = ThingySdkManager.getInstance();
         sharedPreferencesHelper = SharedPreferencesHelper.getInstance(getApplicationContext());
+        scanner=BeaconScanner.getInstance();
+        scanner.setCollector(this);
         Log.i("messaggio", "Starting data collection service");
         Toast.makeText(this, "Starting data collection service", Toast.LENGTH_SHORT).show();
     }
@@ -100,6 +101,7 @@ public class DataCollectorService extends Service {
         if(timer != null)
             timer.dispose();
 
+        scanner.scan(false);//stop scanning
         Log.i("messaggio", "Data collection service stopped");
         Toast.makeText(this, "Data collection service stopped", Toast.LENGTH_SHORT).show();
         ThingyListenerHelper.unregisterThingyListener(getApplicationContext(), thingyListener);
@@ -113,49 +115,46 @@ public class DataCollectorService extends Service {
                     .timeInterval()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(timed -> {
-                        if (!thingySdkManager.getConnectedDevices().isEmpty())
-                            pushData();
-                        else{
-                            Log.i("messaggio", "There isn't any connected sensor");
-                        }
+                        pushData();
                     });
         }
 
         for(BluetoothDevice device : thingySdkManager.getConnectedDevices()){
 
-            // Motion notification
-            // Quaternion, Accelerometer, Gyro, Compass, Euler, Gravity
-            if(sharedPreferencesHelper.getMotionStatus()) {
-                thingySdkManager.enableMotionNotifications(device, true);
-                thingySdkManager.setMotionProcessingFrequency(device, 20);
+                // Motion notification
+                // Quaternion, Accelerometer, Gyro, Compass, Euler, Gravity
+                if(sharedPreferencesHelper.getMotionStatus()) {
+                    thingySdkManager.enableMotionNotifications(device, true);
+                    thingySdkManager.setMotionProcessingFrequency(device, 20);
+                }
+
+                // Environment notification
+                // Temperature, Pressure, AirQuality
+                if(sharedPreferencesHelper.getTemperatureStatus()) {
+                    thingySdkManager.enableTemperatureNotifications(device, true);
+                    thingySdkManager.setTemperatureInterval(device, 10000);
+                }
+
+                if(sharedPreferencesHelper.getPressureStatus()){
+                    thingySdkManager.enablePressureNotifications(device, true);
+                    thingySdkManager.setPressureInterval(device, 10000);
+                }
+
+                if(sharedPreferencesHelper.getHumidityStatus()){
+                    thingySdkManager.enableHumidityNotifications(device, true);
+                    thingySdkManager.setHumidityInterval(device, 10000);
+                }
+
+                if(sharedPreferencesHelper.getAirQualityStatus()){
+                    thingySdkManager.enableAirQualityNotifications(device, true);
+                }
+
+                // Init data collection
+                NordicDeviceDataList data = new NordicDeviceDataList(device.getAddress());
+                intervalData.putIfAbsent(device.getAddress(), data);
             }
 
-            // Environment notification
-            // Temperature, Pressure, AirQuality
-            if(sharedPreferencesHelper.getTemperatureStatus()) {
-                thingySdkManager.enableTemperatureNotifications(device, true);
-                thingySdkManager.setTemperatureInterval(device, 10000);
-            }
-
-            if(sharedPreferencesHelper.getPressureStatus()){
-                thingySdkManager.enablePressureNotifications(device, true);
-                thingySdkManager.setPressureInterval(device, 10000);
-            }
-
-            if(sharedPreferencesHelper.getHumidityStatus()){
-                thingySdkManager.enableHumidityNotifications(device, true);
-                thingySdkManager.setHumidityInterval(device, 10000);
-            }
-
-            if(sharedPreferencesHelper.getAirQualityStatus()){
-                thingySdkManager.enableAirQualityNotifications(device, true);
-            }
-
-            // Init data collection
-            NordicDeviceDataList data = new NordicDeviceDataList(device.getAddress());
-            intervalData.putIfAbsent(device.getAddress(), data);
-
-        }
+        scanner.scan(true);//start scanning for beacons (data collection mode)
     }
 
     private void pushData(){
@@ -173,7 +172,6 @@ public class DataCollectorService extends Service {
         clearIntervalData();
 
         executor.execute(new SubmitRunnable(dataList));
-
     }
 
     // Submit worker thread
@@ -193,8 +191,9 @@ public class DataCollectorService extends Service {
         @Override
         public void run() {
 
-            Log.i("messaggio", "Saving Acc " + dataList.get(0).getAccelerometerValues_x().size() + " data to the server ...");
-            Log.i("messaggio", "Saving Temp " + dataList.get(0).getTemperatureValues().size() + " data to the server ...");
+            //Log.i("messaggio", "Saving Acc " + dataList.get(0).getAccelerometerValues_x().size() + " data to the server ...");
+            //Log.i("messaggio", "Saving Temp " + dataList.get(0).getTemperatureValues().size() + " data to the server ...");
+            //Log.i("messaggio", "Saving RSSI " + dataList.get(0).getRssiValues().size() + " data to the server ...");
             Call<Void> call = api.submitData2(header, dataList);
 
             call.enqueue(new Callback<Void>() {
@@ -226,7 +225,6 @@ public class DataCollectorService extends Service {
                 String docId = nordicDeviceData.getDocumentId();
                 File file = new File(rootFolder,docId + ".txt");
                 file.getParentFile().mkdirs();
-                //String nordicDeviceDataMap = mapper.convertValue(nordicDeviceData, String.class);
 
                 try{
                     FileWriter writer = new FileWriter(file);
@@ -411,5 +409,33 @@ public class DataCollectorService extends Service {
         public DataCollectorService getService() {
             return DataCollectorService.this;
         }
+    }
+
+    //beacon scanner methods
+    public void uploadTemp(Beacon beacon){
+        intervalData.get(""+beacon.getBluetoothAddress()).getTemperatureValues().put(getTimestamp(),""+scanner.getTemperatura(beacon));
+    }
+
+    public void uploadHum(Beacon beacon){
+        intervalData.get(""+beacon.getBluetoothAddress()).getHumidityValues().put(getTimestamp(),""+scanner.getUmidita(beacon));
+    }
+
+    public void uploadAcc(Beacon beacon){
+        intervalData.get(""+beacon.getBluetoothAddress()).getAccelerometerValues_x().put(getTimestamp(),scanner.getAcc(beacon)[0]);
+        intervalData.get(""+beacon.getBluetoothAddress()).getAccelerometerValues_y().put(getTimestamp(),scanner.getAcc(beacon)[1]);
+        intervalData.get(""+beacon.getBluetoothAddress()).getAccelerometerValues_z().put(getTimestamp(),scanner.getAcc(beacon)[2]);
+    }
+
+    public void uploaRssi(Beacon beacon){
+        intervalData.get(""+beacon.getBluetoothAddress()).getRssiValues().put(getTimestamp(),beacon.getRssi());//set rssi in any case
+    }
+
+    public void addBeacon(Beacon beacon){
+        intervalData.putIfAbsent(""+beacon.getBluetoothAddress(), new NordicDeviceDataList(""+beacon.getBluetoothAddress()));
+    }
+
+    private String getTimestamp(){
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        return  timestamp.toString().replace(".", ":");
     }
 }

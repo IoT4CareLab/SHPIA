@@ -1,6 +1,5 @@
 package com.raffaello.nordic.view.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,21 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.raffaello.nordic.R;
 import com.raffaello.nordic.model.Ambient;
 import com.raffaello.nordic.view.adapter.AmbientDetailPagerAdapter;
-
-import java.text.DecimalFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,7 +29,6 @@ public class AmbientDetailFragment extends CommonFragment {
     public AmbientDetailFragment() {}
 
     private AmbientDetailPagerAdapter adapter;
-
 
     @BindView(R.id.ambientDetailTabs)
     TabLayout tabLayout;

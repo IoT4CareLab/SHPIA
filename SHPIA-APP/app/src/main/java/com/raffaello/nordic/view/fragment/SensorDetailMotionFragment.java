@@ -27,9 +27,14 @@ import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.raffaello.nordic.R;
-import com.raffaello.nordic.model.NordicDevice;
+import com.raffaello.nordic.model.Device;
+import com.raffaello.nordic.service.DataCollectorService;
+import com.raffaello.nordic.util.BeaconScanner;
 import com.raffaello.nordic.util.Renderer;
+import com.raffaello.nordic.util.ServiceUtils;
+import com.raffaello.nordic.view.activity.MainActivity;
 
+import org.altbeacon.beacon.Beacon;
 import org.rajawali3d.surface.RajawaliSurfaceView;
 
 import java.text.DecimalFormat;
@@ -45,9 +50,10 @@ import no.nordicsemi.android.thingylib.utils.ThingyUtils;
 public class SensorDetailMotionFragment extends Fragment {
 
     private ThingySdkManager thingySdkManager;
-    private NordicDevice sensor;
+    private Device sensor;
     private BluetoothDevice device;
     private boolean isConnected = false;
+    private BeaconScanner scanner;
 
     private Renderer renderer;
 
@@ -72,8 +78,9 @@ public class SensorDetailMotionFragment extends Fragment {
     @BindView(R.id.rajwali_surface)
     RajawaliSurfaceView surfaceView;
 
-    public SensorDetailMotionFragment(NordicDevice sensor){
+    public SensorDetailMotionFragment(Device sensor){
         this.sensor = sensor;
+        scanner=BeaconScanner.getInstance();
     }
 
     @Override
@@ -114,13 +121,19 @@ public class SensorDetailMotionFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        thingySdkManager = ThingySdkManager.getInstance();
-        isConnected = checkConnection();
+        if(sensor.description.startsWith("Nordic")){
+            thingySdkManager = ThingySdkManager.getInstance();
+            isConnected = checkConnection();
 
-        if(isConnected) {
-            ThingyListenerHelper.registerThingyListener(getContext(), thingyListener, device);
-            renderer.setConnectionState(isConnected);
-            renderer.setNotificationEnabled(true);
+            if(isConnected) {
+                ThingyListenerHelper.registerThingyListener(getContext(), thingyListener, device);
+                renderer.setConnectionState(isConnected);
+                renderer.setNotificationEnabled(true);
+            }
+        }
+        else{
+            if(ServiceUtils.isRunning(DataCollectorService.class, MainActivity.getAppContext()))//if I am collecting data
+                scanner.setFragment2(sensor.address,this);
         }
 
         if (surfaceView != null) {
@@ -445,4 +458,10 @@ public class SensorDetailMotionFragment extends Fragment {
             return mFormat.format(value);
         }
     }
+
+    //methods for beacon
+    public void setvectorAcc(Beacon beacon){
+        addVectorEntry(scanner.getAcc(beacon)[0], scanner.getAcc(beacon)[1], scanner.getAcc(beacon)[2], lineAccGravityVector);
+    }
+
 }

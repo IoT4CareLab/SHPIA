@@ -1,22 +1,26 @@
 package com.raffaello.nordic.util;
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
+import android.location.LocationManager;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.raffaello.nordic.view.activity.MainActivity;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import no.nordicsemi.android.support.v18.scanner.BluetoothLeScannerCompat;
 import no.nordicsemi.android.support.v18.scanner.ScanCallback;
-import no.nordicsemi.android.support.v18.scanner.ScanResult;
+
 
 public class DeviceScanner extends ViewModel {
+
+    BluetoothAdapter adapter=BluetoothAdapter.getDefaultAdapter();
 
     // Live Data
     public MutableLiveData<Boolean> bluethootOff = new MutableLiveData<Boolean>();
@@ -32,6 +36,10 @@ public class DeviceScanner extends ViewModel {
     public void startBLEScan(ScanCallback callback){
         bluetoothLeScannerCompat = BluetoothLeScannerCompat.getScanner();
 
+        //if location and bluetooth are off
+        if(checkLocationAndBluetooth(MainActivity.getAppContext())==false)
+            bluethootOff.setValue(true);
+
         if(isScanning)
             stopBLEScan();
 
@@ -43,7 +51,6 @@ public class DeviceScanner extends ViewModel {
         }
         catch (Exception ex) {
             bluethootOff.setValue(true);
-            //Log.i("messaggio", "Scan error. Are you sure bluethoot is active?");
         }
     }
 
@@ -60,5 +67,10 @@ public class DeviceScanner extends ViewModel {
 
     }
 
+    //check if bluetooth and location are on, for newer versions of android
+    private boolean checkLocationAndBluetooth(Context context) {
+        LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        return manager.isProviderEnabled(LocationManager.GPS_PROVIDER) && adapter.isEnabled();
+    }
 
 }

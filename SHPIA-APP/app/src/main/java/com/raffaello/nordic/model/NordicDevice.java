@@ -1,41 +1,11 @@
 package com.raffaello.nordic.model;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
-
-
-public class NordicDevice implements Parcelable {
-
-    @JsonProperty("ambient")
-    @SerializedName("ambient")
-    public long ambient;
-
-    @JsonProperty("address")
-    @SerializedName("address")
-    public String address;
-
-    @JsonProperty("name")
-    @SerializedName("name")
-    public String name;
-
-    @JsonProperty("description")
-    @SerializedName("description")
-    public String description;
-
-    @JsonProperty("priority")
-    @SerializedName("priority")
-    public int priority;
-
+public class NordicDevice extends Device {
 
     public NordicDevice(long ambient, String address, String name, String description, int priority) {
-        this.ambient = ambient;
-        this.address = address;
-        this.name = name;
-        this.description = description;
-        this.priority = priority;
+        super(ambient, address, name, description, priority);
     }
 
     @Override
@@ -65,7 +35,7 @@ public class NordicDevice implements Parcelable {
 
 
     // Jackson
-    public NordicDevice() {}
+    public NordicDevice() {super();}
 
     public String getDocumentId(){
         return "document::device:" + address;
@@ -74,11 +44,7 @@ public class NordicDevice implements Parcelable {
 
     // Parcelable
     protected NordicDevice(Parcel in) {
-        ambient = in.readLong();
-        address = in.readString();
-        name = in.readString();
-        description = in.readString();
-        priority = in.readInt();
+        super(in);
     }
 
     public static final Creator<NordicDevice> CREATOR = new Creator<NordicDevice>() {
@@ -106,7 +72,5 @@ public class NordicDevice implements Parcelable {
         dest.writeString(description);
         dest.writeInt(priority);
     }
-
     // Parcelable
-
 }

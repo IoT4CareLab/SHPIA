@@ -2,27 +2,14 @@ package com.raffaello.nordic.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-
-import androidx.room.ColumnInfo;
-import androidx.room.Embedded;
-import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.exceptions.OnErrorNotImplementedException;
-
 
 public class Ambient implements Parcelable {
 
@@ -58,7 +45,7 @@ public class Ambient implements Parcelable {
     @JsonProperty("users")
     public List<String> users;
 
-    public Ambient(String s, boolean isKey) {
+    public Ambient(String s, boolean isKey, boolean sensorType, boolean watch) {
 
         if(isKey)
             this.key = s;
@@ -66,6 +53,16 @@ public class Ambient implements Parcelable {
             this.name = s;
 
         this.levels = new ArrayList<>();
+
+        //specify the kind of sensor this ambient contains
+        if(watch)
+            this.name=name+(" (watch)");//for collection with smartwatch
+        else{
+            if(sensorType)
+                this.name=name+(" (broadcast)");//for beacons
+            else
+                this.name=name+(" (connected)");//for nordics
+         }
     }
 
     @JsonIgnore
@@ -81,7 +78,6 @@ public class Ambient implements Parcelable {
         return users.stream().map(Object::toString).collect(Collectors.joining(", "));
 
     }
-
 
     @Override
     public String toString() {

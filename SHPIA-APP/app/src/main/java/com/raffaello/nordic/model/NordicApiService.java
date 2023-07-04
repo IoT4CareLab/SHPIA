@@ -9,7 +9,7 @@ public class NordicApiService {
     private static NordicApi api;
 
 
-    public static NordicApiService getInstance(){
+    public static NordicApiService getInstance(){//singleton pattern
         if(instance == null){
             instance = new NordicApiService();
         }
@@ -21,7 +21,7 @@ public class NordicApiService {
 
         if(api == null){
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.1.8:8000/")
+                    .baseUrl("http://192.168.1.15:8000/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 

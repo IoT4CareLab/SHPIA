@@ -1,5 +1,8 @@
 package com.raffaello.nordic.view.fragment;
 
+import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,17 +13,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.raffaello.nordic.R;
-import com.raffaello.nordic.model.ResponseStatus;
+import com.raffaello.nordic.service.DataCollectorService;
 import com.raffaello.nordic.util.AuthManager;
+import com.raffaello.nordic.util.ServiceUtils;
 import com.raffaello.nordic.util.SharedPreferencesHelper;
 import com.raffaello.nordic.view.activity.MainActivity;
-import com.raffaello.nordic.viewmodel.SensorConfigViewModel;
 
 public abstract class CommonFragment extends Fragment {
 
@@ -73,7 +75,15 @@ public abstract class CommonFragment extends Fragment {
             }
             case R.id.actionScan: {
                 MainActivity activity = (MainActivity) getActivity();
-                activity.startSensorDiscover();
+                if(!checkLocationAndBluetooth(MainActivity.getAppContext()))
+                    Toast.makeText(activity, "Scan failed. Check if bluethooth and location are active", Toast.LENGTH_SHORT).show();
+
+                if(ServiceUtils.isRunning(DataCollectorService.class, MainActivity.getAppContext()))
+                    Toast.makeText(activity, "Scan is already running", Toast.LENGTH_SHORT).show();
+
+                if(!ServiceUtils.isRunning(DataCollectorService.class, MainActivity.getAppContext()) && checkLocationAndBluetooth(MainActivity.getAppContext()))
+                    activity.startSensorDiscover();
+
                 break;
             }
             case R.id.actionStop: {
@@ -81,9 +91,13 @@ public abstract class CommonFragment extends Fragment {
                 activity.stopDataCollection();
                 break;
             }
-
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    public boolean checkLocationAndBluetooth(Context context) {
+        BluetoothAdapter adapter=BluetoothAdapter.getDefaultAdapter();
+        LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        return manager.isProviderEnabled(LocationManager.GPS_PROVIDER) && adapter.isEnabled();
     }
 }

@@ -37,6 +37,9 @@ public class LoginFragment extends Fragment {
     @BindView(R.id.loginPassword)
     EditText passwordView;
 
+    @BindView(R.id.loginButton0)
+    Button loginButton0;
+
     @BindView(R.id.loginButton)
     Button loginButton;
 
@@ -68,6 +71,12 @@ public class LoginFragment extends Fragment {
         if(viewModel.checkAuthentication(getContext())){
             navigateToApp();
         }
+
+        loginButton0.setOnClickListener(v -> {
+            String username = usernameView.getText().toString();
+            String password = passwordView.getText().toString();
+            login(username, password);
+        });
 
         loginButton.setOnClickListener(v -> {
             String username = "pippo";

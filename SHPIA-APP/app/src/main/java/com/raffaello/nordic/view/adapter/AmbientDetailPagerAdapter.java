@@ -1,13 +1,10 @@
 package com.raffaello.nordic.view.adapter;
 
-import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.raffaello.nordic.model.Ambient;
-import com.raffaello.nordic.view.fragment.AmbientListFragment;
 import com.raffaello.nordic.view.fragment.LevelsListFragment;
 import com.raffaello.nordic.view.fragment.SensorsListFragment;
 

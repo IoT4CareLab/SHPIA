@@ -9,11 +9,12 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.raffaello.nordic.R;
-import com.raffaello.nordic.model.NordicDevice;
+import com.raffaello.nordic.model.Device;
 import com.raffaello.nordic.view.adapter.SensorDetailPageAdapter;
 
 import butterknife.BindView;
@@ -21,7 +22,7 @@ import butterknife.ButterKnife;
 
 public class SensorDetailFragment extends CommonFragment {
 
-    private NordicDevice sensor;
+    private Device sensor;
 
     public SensorDetailFragment() {};
 
@@ -42,7 +43,6 @@ public class SensorDetailFragment extends CommonFragment {
         return view;
     }
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -57,16 +57,16 @@ public class SensorDetailFragment extends CommonFragment {
         adapter = new SensorDetailPageAdapter(this, sensor);
         pager.setAdapter(adapter);
 
-        new TabLayoutMediator(tabLayout, pager,
-                (tab, position) -> {
-                    switch (position){
-                        case 0: tab.setText("ENVIRONMENT"); break;
-                        case 1: tab.setText("MOTION"); break;
+            new TabLayoutMediator(tabLayout, pager,
+                    (tab, position) -> {
+                        switch (position){
+                            case 0: tab.setText("ENVIRONMENT"); break;
+                            case 1: tab.setText("MOTION"); break;
+                        }
                     }
-                }
-        ).attach();
+            ).attach();
 
+            //if(sensor.description.startsWith("Beacon"))
+                //((LinearLayout) tabLayout.getTabAt(1).view).setVisibility(View.GONE);
     }
-
-
 }

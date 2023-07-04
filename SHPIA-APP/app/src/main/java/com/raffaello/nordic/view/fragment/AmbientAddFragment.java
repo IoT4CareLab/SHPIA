@@ -5,13 +5,11 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.raffaello.nordic.R;
 import com.raffaello.nordic.model.Ambient;
 import com.raffaello.nordic.viewmodel.AmbientsAddViewModel;
@@ -42,6 +40,12 @@ public class AmbientAddFragment extends BottomSheetDialogFragment {
     @BindView(R.id.ambientAddText)
     EditText ambientName;
 
+    @BindView(R.id.beacon)
+    SwitchMaterial isbeacon;
+
+    @BindView(R.id.watch)
+    SwitchMaterial iswatch;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -61,7 +65,7 @@ public class AmbientAddFragment extends BottomSheetDialogFragment {
         viewModel = ViewModelProviders.of(this).get(AmbientsAddViewModel.class);
 
         addButton.setOnClickListener(v -> {
-            viewModel.addAmbientFromName(ambientName.getText().toString(), parentAmbient);
+            viewModel.addAmbientFromName(ambientName.getText().toString(), parentAmbient,isbeacon.isChecked(),iswatch.isChecked());
         });
 
         if(parentAmbient != null) {
@@ -70,7 +74,7 @@ public class AmbientAddFragment extends BottomSheetDialogFragment {
         }
         else{
             addFromKeyButton.setOnClickListener(v -> {
-                viewModel.addAmbientFromKey(ambientName.getText().toString(), parentAmbient);
+                viewModel.addAmbientFromKey(ambientName.getText().toString(), parentAmbient, isbeacon.isChecked(),iswatch.isChecked());
             });
         }
 

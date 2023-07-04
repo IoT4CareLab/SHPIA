@@ -42,6 +42,8 @@ public class NordicDeviceDataList implements Cloneable{
     private Map<String, Float> gravityValues_x = new HashMap<>();
     private Map<String, Float> gravityValues_y = new HashMap<>();
     private Map<String, Float> gravityValues_z = new HashMap<>();
+    private Map<String, Integer> rssiValues = new HashMap<>();
+
 
     @NonNull
     @Override
@@ -95,9 +97,7 @@ public class NordicDeviceDataList implements Cloneable{
         return address;
     }
 
-    public Map<String, String> getTemperatureValues() {
-        return temperatureValues;
-    }
+    public Map<String, String> getTemperatureValues() {return temperatureValues;}
 
     public Map<String, String> getPressureValues() {
         return pressureValues;
@@ -198,6 +198,10 @@ public class NordicDeviceDataList implements Cloneable{
     public Map<String, Float> getGravityValues_z() {
         return gravityValues_z;
     }
+
+    public Map<String, Integer> getRssiValues() {
+        return rssiValues;
+    }//used only for BeaconDevices
 
     @Override
     public String toString() {
